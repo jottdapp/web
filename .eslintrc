@@ -1,0 +1,10 @@
+{
+  "extends": "airbnb",
+  "env": {
+    "browser": "on"
+  },
+  "rules": {
+    "react/jsx-props-no-spreading": "off",
+    "react/destructuring-assignment": "off"
+  }
+}

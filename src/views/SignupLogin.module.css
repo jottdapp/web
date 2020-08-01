@@ -1,0 +1,49 @@
+.SignupLoginPage {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.SignupLoginForm {
+  width: 90%;
+  box-sizing: border-box;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  background: var(--floating-content-bg);
+  border-radius: 8px;
+  padding: 16px 32px 0 32px;
+}
+
+.SignupLoginForm h1 {
+  font-size: 36px;
+  font-weight: bold;
+  margin: 16px;
+}
+
+/*.SignupLoginForm input {
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 20px;
+  margin: 4px 0;
+  padding: 6px;
+  background: var(--button-color);
+  border-radius: 8px;
+}*/
+
+.button {
+  margin-top: 4px;
+  border-radius: 8px;
+  background: var(--button-color);
+  padding: 16px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: background .1s ease;
+}
+
+.button:hover {
+  background: var(--button-hover-color);
+}

@@ -1,0 +1,17 @@
+.MainPage {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+}
+
+.mainInputContainer input::placeholder {
+  color: #aaa;
+}
+
+.topRight {
+  position: fixed;
+  top: 8px;
+  right: 8px;
+}

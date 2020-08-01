@@ -1,0 +1,27 @@
+.IconInput {
+  padding: 6px;
+  background: var(--button-color);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  min-width: 20px;
+  padding: 0 8px 0 4px;
+}
+
+.icon.passwordIcon {
+  padding-right: 0;
+}
+
+.IconInput input {
+  border: none;
+  background: none;
+  font-family: inherit;
+  padding: 0;
+  font-size: 20px;
+  width: 0;
+  flex-grow: 1;
+}
+

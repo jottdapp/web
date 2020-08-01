@@ -1,0 +1,20 @@
+.CircleButton {
+  background: var(--button-color);
+  color: var(--fg);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background .1s ease;
+}
+
+.CircleButton:hover {
+  background: var(--button-hover-color);
+}
+
+.CircleButton:active {
+  opacity: 0.8;
+  color: var(--fg);
+}

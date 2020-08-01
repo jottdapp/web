@@ -1,13 +1,44 @@
+@import url("https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/hk-grotesk.min.css");
+
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-size: 16px;
+  font-family: 'HK Grotesk', sans-serif;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+button, input, h1, h2, p {
+  font: inherit;
+  color: inherit;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+}
+
+button:focus, input:focus {
+  outline: none;
+}
+
+body.light-theme {
+  --bg: #f3f3f3;
+  --fg: black;
+  --main-input-bg: #fdfdfd;
+  --floating-content-bg: #fdfdfd;
+  --button-color: #ededed;
+  --button-hover-color: #dddddd;
+}
+
+body.dark-theme {
+  --bg: black;
+  --fg: #fff;
+  --main-input-bg: #222;
+  --floating-content-bg: #111;
+  --button-color: #222;
+  --button-hover-color: #333;
+}
+
+a {
+  color: #29b6f6;
 }

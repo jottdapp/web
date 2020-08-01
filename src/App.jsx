@@ -25,7 +25,7 @@ export default function App() {
     <RecoilRoot>
       <ThemeContext.Provider value={{ theme, toggleTheme }}>
         <Router>
-          <MainView path="/" />
+          <MainView path="/app" />
           <LoginView path="/login" />
           <SignupView path="/signup" />
           <SettingsView path="/settings" />

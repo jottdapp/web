@@ -30,6 +30,7 @@ body.light-theme {
   --button-hover-color: #dddddd;
   --table-odd-row: #f1f1f1;
   --table-even-row: #ececec;
+  --error-color: #f44336;
 }
 
 body.dark-theme {
@@ -41,6 +42,7 @@ body.dark-theme {
   --button-hover-color: #333;
   --table-odd-row: #161616;
   --table-even-row: #0f0f0f;
+  --error-color: #f44336;
 }
 
 a {

@@ -1,0 +1,17 @@
+.table td, .table th, .table {
+  text-align: left;
+  padding: 8px;
+}
+
+.table tbody tr:nth-child(odd) {
+  background: var(--table-odd-row);
+}
+
+.table tbody tr:nth-child(even) {
+  background: var(--table-even-row);
+}
+
+.table {
+  border-collapse: collapse;
+}
+

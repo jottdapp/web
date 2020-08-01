@@ -28,6 +28,8 @@ body.light-theme {
   --floating-content-bg: #fdfdfd;
   --button-color: #ededed;
   --button-hover-color: #dddddd;
+  --table-odd-row: #f1f1f1;
+  --table-even-row: #ececec;
 }
 
 body.dark-theme {
@@ -37,6 +39,8 @@ body.dark-theme {
   --floating-content-bg: #111;
   --button-color: #222;
   --button-hover-color: #333;
+  --table-odd-row: #161616;
+  --table-even-row: #0f0f0f;
 }
 
 a {

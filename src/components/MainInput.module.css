@@ -5,6 +5,7 @@
   box-sizing: border-box;
   width: calc(100% - 64px);
   max-width: 1000px;
+  position: relative;
 }
 
 .MainInputContainer textarea {
@@ -19,11 +20,48 @@
   box-sizing: border-box;
   padding: 24px;
   width: 100%;
-  min-height: 92px;
   height: 92px;
+  min-height: 92px;
 }
 
 .MainInputContainer textarea::placeholder {
   opacity: 0.5;
   color: var(--fg);
+}
+
+.mainInputAutocomplete {
+  display: flex;
+  cursor: pointer;
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+}
+
+.mainInputAutocompleteEntry {
+  flex: 1 0 0;
+  text-align: center;
+  padding: 8px;
+  border-right: 2px var(--autocomplete-seperator) solid;
+  background: var(--button-color);
+  cursor: pointer;
+  transition: background .1s ease;
+}
+
+.mainInputAutocompleteEntry:hover {
+  background: var(--button-hover-color);
+}
+
+.mainInputAutocompleteEntry:last-child {
+  border-right: none;
+}
+
+.autocompleteContinuation {
+  font-weight: bold;
+}
+
+.errorMessage {
+  color: var(--error-color);
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translate(-50%, 100%);
 }

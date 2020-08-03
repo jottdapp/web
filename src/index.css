@@ -26,11 +26,12 @@ body.light-theme {
   --fg: black;
   --main-input-bg: #fdfdfd;
   --floating-content-bg: #fdfdfd;
-  --button-color: #ededed;
+  --button-color: #eaeaea;
   --button-hover-color: #dddddd;
   --table-odd-row: #f1f1f1;
   --table-even-row: #ececec;
   --error-color: #f44336;
+  --autocomplete-seperator: #b3b3b3;
 }
 
 body.dark-theme {
@@ -38,11 +39,12 @@ body.dark-theme {
   --fg: #fff;
   --main-input-bg: #222;
   --floating-content-bg: #111;
-  --button-color: #222;
-  --button-hover-color: #333;
+  --button-color: #333;
+  --button-hover-color: #444;
   --table-odd-row: #161616;
   --table-even-row: #0f0f0f;
   --error-color: #f44336;
+  --autocomplete-seperator: #555;
 }
 
 a {

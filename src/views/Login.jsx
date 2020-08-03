@@ -12,7 +12,6 @@ export default function LoginView() {
 
   async function submit() {
     setWaitingForServer(true);
-    console.log(`username ${username} password ${password}`);
     const response = await fetch(`${window.location.origin}/api/auth/login`, {
       method: 'POST',
       body: JSON.stringify({ username, password }, null, 0),
@@ -39,8 +38,8 @@ export default function LoginView() {
         {waitingForServer ? (
           <p>Waiting...</p>
         ) : (
-          <p style={{ color: 'var(--error-color)' }}>{ errorDetail }</p>
-        )}
+            <p style={{ color: 'var(--error-color)' }}>{errorDetail}</p>
+          )}
         <button disabled={waitingForServer} className={styles.button} onClick={submit} type="button">Log In</button>
         <p>
           or&nbsp;

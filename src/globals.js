@@ -1,17 +1,58 @@
-import { atom } from 'recoil';
+import { atom, selector } from 'recoil';
+import { get as getCookie } from 'web-cookies';
 
-// This default categories value is for testing use only.
-export const categories = atom({
-  key: 'categories',
-  default: {
-    cb: '1e749a09-2dc1-4826-8281-d386a506d70a',
-    cc: '530254aa-536b-4d07-bf72-7987ecf319f6',
-    tt: '8900ad1a-5a23-4c08-99bc-1aa2f3c220b0',
-    tw: '46caecbc-3bab-45b9-8ade-856c84b0526a',
+export const stores = atom({
+  key: 'stores',
+  default: undefined,
+});
+
+function parseJwt(token) {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(atob(base64).split('').map((c) => `%${(`00${c.charCodeAt(0).toString(16)}`).slice(-2)}`).join(''));
+
+  return JSON.parse(jsonPayload);
+}
+
+export function getJwt() {
+  let jwt;
+  try {
+    jwt = parseJwt(getCookie('session'));
+  } catch (e) { /* this throws an error if this is not a jwt */ }
+  return jwt;
+}
+
+export const jwt = atom({
+  key: 'jwt',
+  default: getJwt(),
+});
+
+export const username = selector({
+  key: 'username',
+  get: ({ get }) => {
+    const jwtVal = get(jwt);
+    if (jwtVal) {
+      return jwtVal.usr;
+    }
+    return undefined;
   },
 });
 
-export const username = atom({
-  key: 'username',
-  default: '',
+export const loggedIn = selector({
+  key: 'loggedIn',
+  get: ({ get }) => {
+    const jwtVal = get(jwt);
+    if (jwtVal) {
+      return jwtVal.exp > Date.now() / 1000;
+    }
+    return false;
+  },
+});
+
+export const appReady = selector({
+  key: 'appReady',
+  get: ({ get }) => {
+    const categoriesValue = get(stores);
+    return categoriesValue !== undefined;
+  },
 });

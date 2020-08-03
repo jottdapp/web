@@ -1,27 +1,22 @@
 import React, { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { navigate } from '@reach/router';
+import { stores } from '../globals';
 import styles from './Settings.module.css';
 import CategoriesEditor from '../components/CategoriesEditor';
 
 export default function SettingsView() {
-  const [temporaryCategories, setTemporaryCategories] = useState({
-    cb: {
-      type: 'Calendar',
-      sharedWith: [],
-    },
-    cc: {
-      type: 'Calendar',
-      sharedWith: [],
-    },
-    tt: {
-      type: 'Todo',
-      sharedWith: ['Maya', 'Panda'],
-    },
-  });
+  const storesVal = useRecoilValue(stores);
+  const [temporaryStores, setTemporaryStores] = useState(storesVal);
+  if (storesVal === undefined) {
+    navigate('/app');
+    return <p>Redirecting to /app</p>;
+  }
   return (
     <div className={styles.settings}>
       <h1>Settings</h1>
       <h2>Category configuration. This is a dummy table, it doesn&apos;t change anything.</h2>
-      <CategoriesEditor categories={temporaryCategories} onChange={setTemporaryCategories} />
+      <CategoriesEditor categories={temporaryStores} onChange={setTemporaryStores} />
     </div>
   );
 }

@@ -15,7 +15,8 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
-    "recoil": "0.0.10"
+    "recoil": "0.0.10",
+    "web-cookies": "^1.0.5"
   },
   "proxy": "http://localhost:8000",
   "scripts": {

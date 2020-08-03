@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link, navigate } from '@reach/router';
+import { useRecoilState } from 'recoil';
 import { mdiAccount, mdiKey } from '@mdi/js';
+import { getJwt, jwt as jwtAtom } from '../globals';
 import styles from './SignupLogin.module.css';
 import IconInput from '../components/IconInput';
 
@@ -9,6 +11,7 @@ export default function LoginView() {
   const [password, setPassword] = useState('');
   const [waitingForServer, setWaitingForServer] = useState(false);
   const [errorDetail, setErrorDetail] = useState('');
+  const setJwt = useRecoilState(jwtAtom)[1];
 
   async function submit() {
     setWaitingForServer(true);
@@ -23,6 +26,7 @@ export default function LoginView() {
       setWaitingForServer(false);
     } else if (response.status === 200) {
       // success!
+      setJwt(getJwt());
       navigate('/app');
     }
   }
@@ -38,8 +42,8 @@ export default function LoginView() {
         {waitingForServer ? (
           <p>Waiting...</p>
         ) : (
-            <p style={{ color: 'var(--error-color)' }}>{errorDetail}</p>
-          )}
+          <p style={{ color: 'var(--error-color)' }}>{errorDetail}</p>
+        )}
         <button disabled={waitingForServer} className={styles.button} onClick={submit} type="button">Log In</button>
         <p>
           or&nbsp;

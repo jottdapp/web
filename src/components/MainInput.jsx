@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { categories as categoriesAtom } from '../globals';
+import { stores as storesAtom } from '../globals';
 import styles from './MainInput.module.css';
 import getStore from '../api/getStore';
 
@@ -40,9 +40,9 @@ function autocomplete(altText, categories) {
 
 export default function MainInput() {
   const textareaEl = useRef(null);
-  const categories = useRecoilValue(categoriesAtom);
+  const stores = useRecoilValue(storesAtom);
   const [text, setText] = useState('');
-  const [autocompletions, setAutocompletions] = useState(autocomplete(text, categories));
+  const [autocompletions, setAutocompletions] = useState(autocomplete(text, stores));
   const [errorMessage, setErrorMessage] = useState('');
   const [disableInput, setDisableInput] = useState(false);
 
@@ -65,30 +65,30 @@ export default function MainInput() {
     }
     setErrorMessage('');
     // check whether this is a complete category
-    if (categories[newText] !== undefined) {
+    if (stores[newText] !== undefined) {
       // this is the store to show
       setText('');
       setAutocompletions([]);
       setDisableInput(true);
-      getStore(categories[newText]).then((store) => {
+      getStore(stores[newText]).then((store) => {
         if (store === undefined) {
           setErrorMessage('Store does not exist. This is a problem with the server.');
-          setAutocompletions(autocomplete('', categories));
+          setAutocompletions(autocomplete('', stores));
         } else {
           // Currently, no views are supported,
           // so show an error saying this view is not supported
           setErrorMessage(`View type '${store.view}' is currently unsupported.`);
-          setAutocompletions(autocomplete('', categories));
+          setAutocompletions(autocomplete('', stores));
         }
         setDisableInput(false);
       });
     } else {
       let shorterText = newText;
       // remove characters until it can be completed
-      let autocompletion = autocomplete(newText, categories);
-      while (autocompletion.length === 0) {
+      let autocompletion = autocomplete(newText, stores);
+      while (autocompletion.length === 0 && shorterText.length !== 0) {
         shorterText = shorterText.substring(0, newText.length - 1);
-        autocompletion = autocomplete(shorterText, categories);
+        autocompletion = autocomplete(shorterText, stores);
       }
       setText(shorterText);
       setAutocompletions(autocompletion);

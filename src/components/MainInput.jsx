@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { categories as categoriesAtom } from '../globals';
 import styles from './MainInput.module.css';
+import getStore from '../api/getStore';
 
 function MainInputAutocomplete({ currentText, continuations, onClick }) {
   return (
@@ -43,6 +44,7 @@ export default function MainInput() {
   const [text, setText] = useState('');
   const [autocompletions, setAutocompletions] = useState(autocomplete(text, categories));
   const [errorMessage, setErrorMessage] = useState('');
+  const [disableInput, setDisableInput] = useState(false);
 
   function setScale() {
     if (textareaEl.current) {
@@ -58,15 +60,28 @@ export default function MainInput() {
   });
 
   function handleInput(newText) {
+    if (disableInput) {
+      return; // don't change the input when it's disabled
+    }
     setErrorMessage('');
     // check whether this is a complete category
     if (categories[newText] !== undefined) {
       // this is the store to show
       setText('');
-      // Currently, no data types are supported,
-      // so show an error saying this data type is not supported
-      setErrorMessage(`Data type '${categories[newText].type}' is currently unsupported.`);
-      setAutocompletions(autocomplete('', categories));
+      setAutocompletions([]);
+      setDisableInput(true);
+      getStore(categories[newText]).then((store) => {
+        if (store === undefined) {
+          setErrorMessage('Store does not exist. This is a problem with the server.');
+          setAutocompletions(autocomplete('', categories));
+        } else {
+          // Currently, no views are supported,
+          // so show an error saying this view is not supported
+          setErrorMessage(`View type '${store.view}' is currently unsupported.`);
+          setAutocompletions(autocomplete('', categories));
+        }
+        setDisableInput(false);
+      });
     } else {
       let shorterText = newText;
       // remove characters until it can be completed
@@ -88,6 +103,7 @@ export default function MainInput() {
         }}
         value={text}
         ref={textareaEl}
+        disabled={disableInput}
       />
       <MainInputAutocomplete
         currentText={text}

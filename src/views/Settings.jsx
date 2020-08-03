@@ -20,7 +20,7 @@ export default function SettingsView() {
   return (
     <div className={styles.settings}>
       <h1>Settings</h1>
-      <h2>Category configuration</h2>
+      <h2>Category configuration. This is a dummy table, it doesn&apos;t change anything.</h2>
       <CategoriesEditor categories={temporaryCategories} onChange={setTemporaryCategories} />
     </div>
   );

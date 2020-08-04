@@ -16,8 +16,12 @@ function MainInputAutocomplete({ currentText, continuations, onClick }) {
           key={currentText + cont}
           className={styles.mainInputAutocompleteEntry}
         >
-          {currentText}
-          <span className={styles.autocompleteContinuation}>{cont}</span>
+          { cont === '' ? 'Enter' : (
+            <span>
+              {currentText}
+              <span className={styles.autocompleteContinuation}>{cont}</span>
+            </span>
+          ) }
         </button>
       )) }
     </div>
@@ -29,7 +33,9 @@ function autocomplete(altText, categories) {
   const results = [];
   for (let i = 0; i < Object.keys(categories).length; i += 1) {
     const shortcut = Object.keys(categories)[i];
-    if (altText === shortcut.substring(0, altText.length)) {
+    if (altText === shortcut) {
+      results.push('');
+    } else if (altText === shortcut.substring(0, altText.length)) {
       if (results.indexOf(shortcut[altText.length]) === -1) {
         results.push(shortcut[altText.length]);
       }
@@ -65,12 +71,26 @@ export default function MainInput() {
     }
     setErrorMessage('');
     // check whether this is a complete category
-    if (stores[newText] !== undefined) {
-      // this is the store to show
+    let shorterText = newText;
+    // remove characters until it can be completed
+    let autocompletion = autocomplete(newText, stores);
+    while (autocompletion.length === 0 && shorterText.length !== 0) {
+      shorterText = shorterText.substring(0, newText.length - 1);
+      autocompletion = autocomplete(shorterText, stores);
+    }
+    setText(shorterText);
+    setAutocompletions(autocompletion);
+  }
+
+  function onEnter() {
+    if (stores[text] === undefined) {
+      setErrorMessage('Not a shortcut for a store.');
+    } else {
+      // text is the shortcut for the store to show
       setText('');
       setAutocompletions([]);
       setDisableInput(true);
-      getStore(stores[newText]).then((store) => {
+      getStore(stores[text]).then((store) => {
         if (store === undefined) {
           setErrorMessage('Store does not exist. This is a problem with the server.');
           setAutocompletions(autocomplete('', stores));
@@ -82,16 +102,12 @@ export default function MainInput() {
         }
         setDisableInput(false);
       });
-    } else {
-      let shorterText = newText;
-      // remove characters until it can be completed
-      let autocompletion = autocomplete(newText, stores);
-      while (autocompletion.length === 0 && shorterText.length !== 0) {
-        shorterText = shorterText.substring(0, newText.length - 1);
-        autocompletion = autocomplete(shorterText, stores);
-      }
-      setText(shorterText);
-      setAutocompletions(autocompletion);
+    }
+  }
+
+  function handleKeyDown(event) {
+    if (event.which === 13) { // Enter key
+      onEnter();
     }
   }
 
@@ -101,6 +117,7 @@ export default function MainInput() {
         onChange={(event) => {
           handleInput(event.target.value);
         }}
+        onKeyDown={handleKeyDown}
         value={text}
         ref={textareaEl}
         disabled={disableInput}
@@ -108,7 +125,13 @@ export default function MainInput() {
       <MainInputAutocomplete
         currentText={text}
         continuations={autocompletions}
-        onClick={handleInput}
+        onClick={(txt) => {
+          if (txt === text) {
+            onEnter();
+          } else {
+            handleInput(txt);
+          }
+        }}
       />
       <p className={styles.errorMessage}>{errorMessage}</p>
     </div>

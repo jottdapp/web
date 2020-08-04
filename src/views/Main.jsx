@@ -29,7 +29,7 @@ export default function MainView() {
     // attempt to list stores asynchronously
     if (!listingStores) {
       listingStores = true;
-      fetch('/api/store/list').then((r) => r.json()).then(setStores);
+      fetch('/api/store/list').then((r) => r.json()).catch(() => navigate('/login')).then(setStores);
     }
     return <p>Loading</p>;
   }

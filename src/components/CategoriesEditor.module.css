@@ -1,6 +1,8 @@
 .table td, .table th, .table {
   text-align: left;
   padding: 8px;
+  height: 40px;
+  box-sizing: border-box;
 }
 
 .table tbody tr:nth-child(odd) {
@@ -15,3 +17,16 @@
   border-collapse: collapse;
 }
 
+.uuid {
+  font-size: 12px;
+  line-height: 0.85;
+}
+
+.buttonArea {
+  display: flex;
+}
+
+.buttonArea button {
+  display: flex;
+  align-items: center;
+}

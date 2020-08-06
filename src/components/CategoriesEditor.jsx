@@ -75,6 +75,22 @@ export default function CategoriesEditor() {
     savingCounter -= 1;
   }
 
+  async function deleteStore(key, uuid) {
+    savingCounter += 1;
+    const prevStores = clone(stores);
+    const newStores = clone(stores);
+    delete newStores[key];
+    setStores(newStores);
+    const response = await fetch('/api/store/delete', {
+      method: 'POST',
+      body: JSON.stringify({
+        store_uuid: uuid,
+      }),
+    });
+    savingCounter -= 1;
+    setRealStores(newStores);
+  }
+
   return (
     <div>
       <table className={styles.table}>
@@ -91,7 +107,7 @@ export default function CategoriesEditor() {
               <td><input value={key} onChange={handleChange.bind(undefined, key)} /></td>
               <td>{val.view}</td>
               <td className="buttonArea">
-                <button type="button" label="Delete">
+                <button type="button" label="Delete" onClick={deleteStore.bind(undefined, key, val.uuid)}>
                   <Icon path={mdiDelete} size={1} />
                 </button>
               </td>

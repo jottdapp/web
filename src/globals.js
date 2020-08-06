@@ -1,5 +1,6 @@
 import { atom, selector } from 'recoil';
 import { get as getCookie } from 'web-cookies';
+import Todo from './components/views/Todo';
 
 export const stores = atom({
   key: 'stores',
@@ -56,3 +57,4 @@ export const appReady = selector({
     return categoriesValue !== undefined;
   },
 });
+export const SUPPORTED_VIEWS = { Todo };

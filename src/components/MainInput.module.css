@@ -1,19 +1,18 @@
 .MainInputContainer {
-  background: var(--main-input-bg);
   box-shadow: 0px 8px 32px var(--shadow-color);
-  border-radius: 8px;
   box-sizing: border-box;
   width: calc(100% - 64px);
   max-width: 1000px;
   position: relative;
 }
 
-.MainInputContainer textarea {
+.MainInputContainer > textarea {
   border: none;
   outline: none;
   resize: none;
   background: none;
   color: var(--fg);
+  border-radius: 8px;
 
   font-size: 36px;
   outline: none;
@@ -22,11 +21,16 @@
   width: 100%;
   height: 92px;
   min-height: 92px;
+  background: var(--main-input-bg);
 }
 
-.MainInputContainer textarea::placeholder {
+.MainInputContainer > textarea::placeholder {
   opacity: 0.5;
   color: var(--fg);
+}
+
+.MainInputContainer.hasAutocomplete > textarea {
+  border-radius: 8px 8px 0 0;
 }
 
 .mainInputAutocomplete {
@@ -64,4 +68,14 @@
   bottom: -8px;
   left: 50%;
   transform: translate(-50%, 100%);
+}
+
+textarea.textareaWithView {
+  margin-bottom: 16px;
+}
+
+.viewContainer {
+  padding: 24px;
+  background: var(--main-input-bg);
+  border-radius: 8px;
 }

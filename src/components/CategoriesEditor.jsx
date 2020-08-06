@@ -54,6 +54,27 @@ export default function CategoriesEditor() {
     }
   }
 
+  async function addTodo() {
+    savingCounter += 1;
+    const shortcut = prompt('shortcut (it is only like this because we didn\'t have time)');
+    const response = await fetch('/api/store/new', {
+      method: 'POST',
+      body: JSON.stringify({
+        view: 'Todo',
+        shortcut,
+      }, null, 0),
+    });
+    const json = await response.json();
+    const newStores = clone(stores);
+    newStores[shortcut] = {
+      uuid: json,
+      view: 'Todo',
+    };
+    setStores(newStores);
+    setRealStores(newStores);
+    savingCounter -= 1;
+  }
+
   return (
     <div>
       <table className={styles.table}>
@@ -78,6 +99,7 @@ export default function CategoriesEditor() {
           )) }
         </tbody>
       </table>
+      <button type="button" onClick={addTodo}>Add todo</button>
       <p>{ savingCounter === 0 ? 'Saved.' : 'Saving, don\'t exit this menu...' }</p>
     </div>
   );

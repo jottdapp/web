@@ -1,0 +1,22 @@
+.todoItem, .todoAdd {
+  display: flex;
+  align-items: center;
+}
+
+.toggleCompleted {
+  cursor: pointer;
+}
+
+.textarea {
+  margin-left: 4px;
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  resize: none;
+  background: none;
+}
+
+.textarea::placeholder {
+  color: inherit;
+  opacity: 0.5;
+}

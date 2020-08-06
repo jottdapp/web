@@ -1,8 +1,13 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { stores as storesAtom } from '../globals';
+import cloneDeep from 'lodash/cloneDeep';
+import clone from 'lodash/clone';
+import { stores as storesAtom, SUPPORTED_VIEWS } from '../globals';
 import styles from './MainInput.module.css';
 import getStore from '../api/getStore';
+
+import newNote from '../api/newNote';
+import editNote from '../api/editNote';
 
 function MainInputAutocomplete({ currentText, continuations, onClick }) {
   return (
@@ -44,26 +49,36 @@ function autocomplete(altText, categories) {
   return results.sort();
 }
 
-export default function MainInput() {
-  const textareaEl = useRef(null);
-  const stores = useRecoilValue(storesAtom);
-  const [text, setText] = useState('');
-  const [autocompletions, setAutocompletions] = useState(autocomplete(text, stores));
-  const [errorMessage, setErrorMessage] = useState('');
-  const [disableInput, setDisableInput] = useState(false);
-
+function ResizeTextarea(textareaEl) {
   function setScale() {
-    if (textareaEl.current) {
-      textareaEl.current.style.height = '1px';
-      textareaEl.current.style.height = `${textareaEl.current.scrollHeight}px`;
+    const textarea = textareaEl.current;
+    if (textarea) {
+      textarea.style.height = '1px';
+      textarea.style.height = `${textareaEl.current.scrollHeight}px`;
     }
   }
-
   setScale();
   useEffect(() => {
     const id = window.addEventListener('resize', setScale);
     return () => window.removeEventListener('resize', id);
   });
+}
+
+export default function MainInput() {
+  const textareaEl = useRef(null);
+  ResizeTextarea(textareaEl);
+  const stores = useRecoilValue(storesAtom);
+  const [text, setText] = useState('');
+  const [autocompletions, setAutocompletions] = useState(autocomplete(text, stores));
+  const [errorMessage, setErrorMessage] = useState('');
+  const [disableInput, setDisableInput] = useState(false);
+  const [view, setView] = useState(null);
+  const [viewNotes, setViewNotes] = useState(null);
+  const [viewUuid, setViewUuid] = useState(null);
+
+  if (view && viewNotes && viewUuid) {
+    return <MainInputWithView view={view} notes={viewNotes} uuid={viewUuid} />;
+  }
 
   function handleInput(newText) {
     if (disableInput) {
@@ -90,29 +105,36 @@ export default function MainInput() {
       setText('');
       setAutocompletions([]);
       setDisableInput(true);
-      getStore(stores[text]).then((store) => {
-        if (store === undefined) {
-          setErrorMessage('Store does not exist. This is a problem with the server.');
-          setAutocompletions(autocomplete('', stores));
-        } else {
-          // Currently, no views are supported,
-          // so show an error saying this view is not supported
-          setErrorMessage(`View type '${store.view}' is currently unsupported.`);
-          setAutocompletions(autocomplete('', stores));
-        }
+      if (SUPPORTED_VIEWS[stores[text].view] === undefined) {
+        setErrorMessage(`View type '${stores[text].view}' is currently unsupported.`);
+        setAutocompletions(autocomplete('', stores));
         setDisableInput(false);
-      });
+      } else {
+        getStore(stores[text].uuid).then((store) => {
+          if (store === undefined) {
+            setErrorMessage('Store does not exist. This is a problem with the server.');
+            setAutocompletions(autocomplete('', stores));
+          } else {
+            setView(stores[text].view);
+            setViewNotes(store);
+            setViewUuid(stores[text].uuid);
+            setAutocompletions(autocomplete('', stores));
+          }
+          setDisableInput(false);
+        });
+      }
     }
   }
 
   function handleKeyDown(event) {
     if (event.which === 13) { // Enter key
       onEnter();
+      event.preventDefault();
     }
   }
 
   return (
-    <div className={styles.MainInputContainer}>
+    <div className={autocompletions === [] ? (styles.MainInputContainer) : (`${styles.MainInputContainer} ${styles.hasAutocomplete}`)}>
       <textarea
         onChange={(event) => {
           handleInput(event.target.value);
@@ -134,6 +156,44 @@ export default function MainInput() {
         }}
       />
       <p className={styles.errorMessage}>{errorMessage}</p>
+    </div>
+  );
+}
+
+function MainInputWithView({ uuid, view, notes: initialNotes }) {
+  const ActualView = SUPPORTED_VIEWS[view];
+  const [text, setText] = useState('');
+  const [notes, setNotes] = useState(initialNotes);
+  const textareaEl = useRef(null);
+  ResizeTextarea(textareaEl);
+
+  async function onNewNote(note) {
+    const noteUuid = await newNote(uuid, note);
+    const newNotes = clone(notes);
+    newNotes[noteUuid] = note;
+    setNotes(newNotes);
+  }
+
+  function onEditNote(noteUuid, note) {
+    const newNotes = cloneDeep(notes);
+    newNotes[noteUuid] = note;
+    setNotes(newNotes);
+    return editNote(uuid, noteUuid, note);
+  }
+
+  return (
+    <div className={styles.MainInputContainer}>
+      <textarea
+        onChange={(event) => {
+          setText(event.target.value);
+        }}
+        value={text}
+        ref={textareaEl}
+        className={styles.textareaWithView}
+      />
+      <div className={styles.viewContainer}>
+        <ActualView search={text} notes={notes} onEditNote={onEditNote} onNewNote={onNewNote} />
+      </div>
     </div>
   );
 }
